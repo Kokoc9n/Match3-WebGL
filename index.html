@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Match3</title>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        background: linear-gradient(to bottom, #303030, #474747); /* Gradient background */
+      }
+    </style>
+  </head>
+  <body style="text-align: center; padding: 0; border: 0; margin: 0;">
+    <canvas id="unity-canvas" width="415" height="915" tabindex="-1" style="background: #231F20;"></canvas>
+    <script src="Build/WebGL.loader.js"></script>
+    <script>
+      // Define the original width and height for aspect ratio
+      const originalWidth = 415;
+      const originalHeight = 915;
+
+      // Function to resize the canvas while maintaining aspect ratio
+      function resizeCanvas() {
+        var canvas = document.querySelector("#unity-canvas");
+
+        // Calculate the new height based on the window height
+        var newHeight = window.innerHeight;
+
+        // Calculate the new width based on the aspect ratio
+        var newWidth = (newHeight * originalWidth) / originalHeight;
+
+        // Apply the new dimensions to the canvas
+        canvas.style.width = newWidth + "px";
+        canvas.style.height = newHeight + "px";
+      }
+
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Mobile device style: fill the whole browser client area with the game canvas
+        var meta = document.createElement('meta');
+        meta.name = 'viewport';
+        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
+        document.getElementsByTagName('head')[0].appendChild(meta);
+
+        var canvas = document.querySelector("#unity-canvas");
+        canvas.style.position = "fixed";
+
+        // Resize canvas on mobile device
+        resizeCanvas();
+      } else {
+        // For desktop browsers, adjust canvas size while maintaining aspect ratio
+        resizeCanvas();
+
+        // Resize the canvas on window resize to maintain the aspect ratio
+        window.addEventListener('resize', resizeCanvas);
+      }
+
+      // Initialize Unity WebGL
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/WebGL.data.br",
+        frameworkUrl: "Build/WebGL.framework.js.br",
+        codeUrl: "Build/WebGL.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "Match3",
+        productVersion: "1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
+</html>
